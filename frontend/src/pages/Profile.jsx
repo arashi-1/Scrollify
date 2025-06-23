@@ -2,11 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { getPlaylists } from "../api/playlists";
 import { getLikedSongs } from "../api/likedSongs";
+import Login from "../auth/Login";
+import Register from "../auth/Register";
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
   const [playlistCount, setPlaylistCount] = useState(0);
   const [likedCount, setLikedCount] = useState(0);
+  const [showLogin, setShowLogin] = useState(true);
 
   useEffect(() => {
     getPlaylists().then((res) => setPlaylistCount(res.data.length));
@@ -15,9 +18,23 @@ const Profile = () => {
 
   if (!user)
     return (
-      <p className="mt-32 text-center text-gray-600">
-        Please login to view your profile.
-      </p>
+      <div className="mt-24 flex flex-col items-center">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+          Please login to view your profile
+        </h2>
+        <div className="w-full max-w-sm bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+          {showLogin ? <Login /> : <Register />}
+          <p className="text-sm text-center text-gray-600 mt-4">
+            {showLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            <button
+              onClick={() => setShowLogin(!showLogin)}
+              className="text-blue-500 hover:underline"
+            >
+              {showLogin ? "Register here" : "Login here"}
+            </button>
+          </p>
+        </div>
+      </div>
     );
 
   return (

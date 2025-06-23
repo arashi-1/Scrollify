@@ -28,17 +28,36 @@ const UserPlaylists = () => {
           + New Playlist
         </button>
       </div>
-      <div className="space-y-4">
-        {playlists.map((p) => (
-          <Link
-            key={p._id}
-            to={`/playlist/${p._id}`}
-            className="block p-4 bg-white dark:bg-gray-800 rounded shadow hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            {p.name} ({p.songs.length} songs)
-          </Link>
-        ))}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {playlists.map((p) => {
+          const cover =
+            p.songs?.[0]?.image?.[2]?.url || // from Saavn image format
+            p.songs?.[0]?.album?.cover_medium || // from Deezer-like format
+            "https://img.freepik.com/free-vector/music-notes-rainbow-colourful-with-vinyl-record-white-backgro_1308-90953.jpg"; // fallback
+
+          return (
+            <Link
+              key={p._id}
+              to={`/playlist/${p._id}`}
+              className="block bg-white dark:bg-gray-800 rounded shadow hover:bg-gray-100 dark:hover:bg-gray-700 overflow-hidden"
+            >
+              <img
+                src={cover}
+                alt="Playlist cover"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="font-semibold text-lg text-black dark:text-white">
+                  {p.name}
+                </h3>
+                <p className="text-sm text-gray-500">{p.songs.length} songs</p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
+
       {showModal && (
         <CreatePlaylistModal
           onClose={() => setShowModal(false)}

@@ -10,7 +10,9 @@ const Sidebar = () => {
       <Link to="/playlist">
         <FaHeart className="text-2xl hover:text-red-400 cursor-pointer" />
       </Link>
-      <FaMusic className="text-2xl hover:text-green-400 cursor-pointer" />
+      <Link to="my-playlists">
+        <FaMusic className="text-2xl hover:text-green-400 cursor-pointer" />
+      </Link>
       <FaBookmark className="text-2xl hover:text-yellow-400 cursor-pointer" />
       <Link to="/profile">
         <FaUser

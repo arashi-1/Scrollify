@@ -39,10 +39,26 @@ router.post("/:playlistId/song", authenticateToken, async (req, res) => {
     });
     if (!playlist) return res.status(404).json({ error: "Playlist not found" });
 
-    playlist.songs.push(req.body);
+    const song = {
+      id: req.body.id,
+      name: req.body.name,
+      primaryArtists: req.body.primaryArtists,
+      image: req.body.image, // ✅ make sure this exists
+      downloadUrl: req.body.downloadUrl,
+    };
+
+    playlist.songs.push({
+      id,
+      title: name,
+      artist: { name: primaryArtists },
+      album: { cover_medium: image?.[2]?.link || image?.[0]?.url || "" },
+      preview: downloadUrl?.[2]?.url || downloadUrl?.[0]?.url || "",
+    });
+
     await playlist.save();
     res.json(playlist);
   } catch (err) {
+    console.error("❌ Failed to add song to playlist:", err);
     res.status(500).json({ error: "Failed to add song to playlist" });
   }
 });

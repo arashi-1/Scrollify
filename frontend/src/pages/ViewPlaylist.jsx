@@ -1,4 +1,3 @@
-// ViewPlaylist.jsx
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -16,16 +15,21 @@ const ViewPlaylist = () => {
   }, [playlistId]);
 
   const toggleVisibility = async () => {
-    const updated = await togglePlaylistVisibility(
-      playlist._id,
-      !playlist.isPublic
-    );
-    setPlaylist(updated.data);
-    if (updated.data.isPublic) {
-      const base = window.location.origin;
-      setShareUrl(`${base}/shared/${updated.data._id}`);
-    } else {
-      setShareUrl("");
+    try {
+      const updated = await togglePlaylistVisibility(
+        playlist._id,
+        !playlist.isPublic
+      );
+      setPlaylist(updated.data);
+      if (updated.data.isPublic) {
+        const base = window.location.origin;
+        setShareUrl(`${base}/shared/${updated.data._id}`);
+      } else {
+        setShareUrl("");
+      }
+    } catch (err) {
+      console.error("Failed to toggle visibility", err);
+      alert("Could not change playlist visibility");
     }
   };
 
@@ -38,7 +42,7 @@ const ViewPlaylist = () => {
         {playlist.name}
       </h2>
 
-      {playlist.userId === user?.id && (
+      {user?.id === playlist.userId && (
         <button
           onClick={toggleVisibility}
           className="mb-2 bg-purple-600 text-white px-3 py-1 rounded"
@@ -49,20 +53,24 @@ const ViewPlaylist = () => {
 
       {shareUrl && (
         <div className="mb-4">
-          <p className="text-sm">Share this playlist:</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Share this playlist:
+          </p>
           <input
             readOnly
             value={shareUrl}
-            className="w-full p-1 bg-gray-200 rounded text-sm"
+            className="w-full p-1 bg-gray-200 dark:bg-gray-700 rounded text-sm"
             onClick={(e) => e.target.select()}
           />
         </div>
       )}
 
       {playlist.songs.length === 0 ? (
-        <p>No songs in this playlist.</p>
+        <p className="text-gray-500">No songs in this playlist.</p>
       ) : (
-        playlist.songs.map((song) => <MusicCard key={song.id} song={song} />)
+        playlist.songs.map((song, index) => (
+          <MusicCard key={song.id || index} song={song} />
+        ))
       )}
     </div>
   );

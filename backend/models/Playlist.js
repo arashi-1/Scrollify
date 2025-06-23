@@ -6,11 +6,22 @@ const playlistSchema = new mongoose.Schema({
   isPublic: { type: Boolean, default: false },
   songs: [
     {
-      id: Number,
+      id: { type: String, required: true },
       title: String,
-      artist: { name: String },
-      album: { cover_medium: String },
-      preview: String,
+      name: String,
+      primaryArtists: String,
+      image: [
+        {
+          quality: String,
+          url: String,
+        },
+      ],
+      downloadUrl: [
+        {
+          quality: String,
+          url: String,
+        },
+      ],
     },
   ],
 });

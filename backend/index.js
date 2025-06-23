@@ -17,7 +17,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173", // Replace with frontend URL if different
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );

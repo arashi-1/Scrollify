@@ -9,7 +9,33 @@ const Playlist = () => {
 
   useEffect(() => {
     if (user) {
-      getLikedSongs().then((res) => setLikedSongs(res.data));
+      getLikedSongs().then((res) => {
+        const fallbackImage =
+          "https://cdn.pixabay.com/photo/2020/06/03/10/57/music-5253294_1280.jpg";
+
+        const normalizedSongs = res.data.map((song) => {
+          const imageLink =
+            song.album?.cover_high || song.album?.cover_medium || fallbackImage;
+
+          return {
+            id: song.id,
+            name: song.title || song.name || "Unknown Title",
+            primaryArtists: song.artist?.name || "Unknown Artist",
+            image: [
+              { link: imageLink },
+              { link: imageLink },
+              { link: imageLink },
+            ],
+            downloadUrl: [
+              { url: song.preview || "" },
+              { url: song.preview || "" },
+              { url: song.preview || "" },
+            ],
+          };
+        });
+
+        setLikedSongs(normalizedSongs);
+      });
     }
   }, [user]);
 
